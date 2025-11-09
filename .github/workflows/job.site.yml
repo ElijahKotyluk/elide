@@ -53,7 +53,7 @@ jobs:
       - name: "Setup: Docker Buildx"
         uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
       - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@e140024fdc2d95d3c7e10a636887a91090d29990 # v1.4.0
+        uses: graalvm/setup-graalvm@eec48106e0bf45f2976c2ff0c3e22395cced8243 # v1.4.2
         with:
           distribution: "graalvm"
           java-version: "25"
@@ -119,12 +119,12 @@ jobs:
         run: |
           tar -czf site.tar.gz build/site
       - name: "Upload: Manifest"
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: site-tarball-phase1
           path: ./site.tar.gz
       - name: "Upload: Site"
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: site-manifest
           path: ./site/docs/app/build/generated/ksp/main/resources/elide/runtime/generated/app.manifest.pb
@@ -171,7 +171,7 @@ jobs:
       - name: "Setup: Docker Buildx"
         uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
       - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@e140024fdc2d95d3c7e10a636887a91090d29990 # v1.4.0
+        uses: graalvm/setup-graalvm@eec48106e0bf45f2976c2ff0c3e22395cced8243 # v1.4.2
         with:
           components: "native-image,js,wasm"
           distribution: "graalvm"
@@ -206,12 +206,12 @@ jobs:
       - name: "Setup: Yarn"
         run: yarn
       - name: "Setup: Site Manifest"
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
           name: site-manifest
           path: ./artifacts/
       - name: "Setup: Site Tarball"
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
           name: site-tarball-phase1
           path: .
@@ -247,7 +247,7 @@ jobs:
           rm -fv site.tar.gz;
           tar -czf site.tar.gz build/site;
       - name: "Upload: Site Tarball"
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: site-tarball-phase2
           path: ./site.tar.gz

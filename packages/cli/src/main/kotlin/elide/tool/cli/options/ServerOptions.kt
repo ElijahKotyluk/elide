@@ -46,10 +46,20 @@ import elide.tooling.project.ElideProject
   )
   var port: Int? = null
 
+  /** Specifies a WSGI app to be served. */
+  @Option(
+    names = ["--wsgi"],
+    description = [
+      "Name of a callable symbol to be used as the WSGI application, may contain arguments for factory functions, " +
+              "e.g. my_app(arg1,arg2).",
+    ],
+  )
+  var wsgi: String? = null
+
   fun effectiveServerOptions(project: ElideProject?): EffectiveServerOptions {
     return EffectiveServerOptions(
       host = host ?: project?.manifest?.dev?.server?.host ?: DEFAULT_SERVER_HOST,
-      port = (port ?: project?.manifest?.dev?.server?.port ?:DEFAULT_SERVER_PORT).toUShort(),
+      port = (port ?: project?.manifest?.dev?.server?.port ?: DEFAULT_SERVER_PORT).toUShort(),
       linkHost = when (val explicit = host) {
         null -> DEFAULT_LINK_HOST
         LOCAL_SERVER_HOST, DEFAULT_SERVER_HOST -> DEFAULT_LINK_HOST

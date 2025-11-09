@@ -61,6 +61,8 @@ public data class ElidePackageManifest(
   val lockfile: LockfileSettings? = null,
   val web: WebSettings? = null,
   val secrets: SecretSettings? = null,
+  val engine: RuntimeEngineSettings? = null,
+  val server: ServerSettings? = null,
 ) : PackageManifest {
   @Transient private val workspace: AtomicReference<Pair<Path, ElidePackageManifest>> = AtomicReference(null)
 
@@ -528,6 +530,12 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class PythonSettings(
     val debug: Boolean = false,
+    val wsgi: WsgiSettings = WsgiSettings(),
+  )
+
+  @JvmRecord @Serializable public data class WsgiSettings(
+    val name: String? = null,
+    val args: List<String>? = null,
   )
 
   @JvmRecord @Serializable public data class RubySettings(
@@ -684,6 +692,51 @@ public data class ElidePackageManifest(
     val project: ProjectRemoteSettings? = null,
     val github: GithubRemoteSettings? = null,
   )
+
+  @JvmRecord @Serializable public data class RuntimeEngineSettings(
+    val maxContexts: Int? = null,
+  )
+
+  @JvmRecord @Serializable public data class ServerSettings(
+    val address: BindingAddress? = null,
+    val cleartext: Boolean = true,
+    val https: HttpsServerSettings? = null,
+    val http3: Http3ServerSettings? = null,
+    val serverName: String? = null,
+  ) {
+    @Serializable public sealed interface SSLCertificate {
+      @JvmRecord @Serializable public data class LocalFileCertificate(
+        val certFile: String,
+        val keyFile: String,
+        val keyPassphrase: String? = null,
+      ) : SSLCertificate
+
+      @JvmRecord @Serializable public data class SelfSignedCertificate(
+        val subject: String? = null,
+        val notBefore: Long? = null,
+        val notAfter: Long? = null,
+      ) : SSLCertificate
+    }
+
+    @Serializable public sealed interface BindingAddress {
+      @Serializable @JvmInline public value class DomainSocketAddress(public val path: String) : BindingAddress
+      @JvmRecord @Serializable public data class SocketAddress(
+        public val hostname: String? = null,
+        public val port: Int? = null,
+      ) : BindingAddress
+    }
+
+    @JvmRecord @Serializable public data class HttpsServerSettings(
+      val certificate: SSLCertificate,
+      val address: BindingAddress? = null,
+    )
+
+    @JvmRecord @Serializable public data class Http3ServerSettings(
+      val certificate: SSLCertificate,
+      val address: BindingAddress? = null,
+      val advertise: Boolean = false,
+    )
+  }
 }
 
 public fun NpmDependencies.merge(other: NpmDependencies): NpmDependencies {
